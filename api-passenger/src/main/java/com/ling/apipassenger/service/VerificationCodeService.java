@@ -1,8 +1,10 @@
 package com.ling.apipassenger.service;
 
+import com.ling.apipassenger.remote.ServicePassengerUserClient;
 import com.ling.apipassenger.remote.ServiceVerificationcodeClient;
 import com.ling.internalcommon.constant.CommonStatusEnum;
 import com.ling.internalcommon.dto.ResponseResult;
+import com.ling.internalcommon.request.VerificationCodeDTO;
 import com.ling.internalcommon.response.NumberCodeResponse;
 import com.ling.internalcommon.response.TokenResponse;
 import net.sf.json.JSONObject;
@@ -16,8 +18,13 @@ import java.util.concurrent.TimeUnit;
 
 @Service
 public class VerificationCodeService {
+    //调用生成验证码服务远程客户端
     @Autowired
     private ServiceVerificationcodeClient serviceVerificationcodeClient;
+
+    //调用添加乘客远程客户端
+    @Autowired
+    private ServicePassengerUserClient servicePassengerUserClient;
 
     //存入redis的key的前缀
     private String verificationCodePrefix ="passenger-verification-code";
@@ -84,8 +91,11 @@ public class VerificationCodeService {
             return ResponseResult.fail(CommonStatusEnum.VERIFICATION_CODE_INCORRECT.getCode(),CommonStatusEnum.VERIFICATION_CODE_INCORRECT.getValue());
         }
 
+        VerificationCodeDTO verificationCodeDTO= new VerificationCodeDTO();
+        verificationCodeDTO.setPassengerPhone(passengerPhone);
+        verificationCodeDTO.setVerificationCode(verificationCode);
         //判断原来是否有该用户，有就登录，没有就添加用户
-
+        servicePassengerUserClient.loginOrRegister(verificationCodeDTO);
         //颁发令牌
 
         //相应的结果，要将token返回
