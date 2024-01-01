@@ -30,12 +30,6 @@
             <artifactId>spring-cloud-starter-loadbalancer</artifactId>
         </dependency>
 
-        <!-- 自定义的公共返回结果的包的依赖       -->
-        <dependency>
-            <groupId>org.ling</groupId>
-            <artifactId>internal-common</artifactId>
-            <version>1.0-SNAPSHOT</version>
-        </dependency>
         <!-- redis的依赖包       -->
         <dependency>
             <groupId>org.springframework.boot</groupId>

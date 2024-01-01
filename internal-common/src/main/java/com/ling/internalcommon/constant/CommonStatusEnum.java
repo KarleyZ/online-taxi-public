@@ -12,7 +12,15 @@ public enum CommonStatusEnum {
     /*
     * 请求返回失败
     * */
-    FAIL(0,"fail")
+    FAIL(0,"fail"),
+    /*
+    * 验证码错误提示：1000-1099，1099是最后的情况，兜底提示验证码出问题
+    * */
+    VERIFICATION_CODE_ERROR(1099,"VerificationCode is error"),
+    /*
+    * 验证码错误提示：验证码未过期但是不正确
+    * */
+    VERIFICATION_CODE_INCORRECT(1098,"VerficationCode is incorrected")
     ;
 
     @Getter
