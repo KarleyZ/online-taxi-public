@@ -39,7 +39,7 @@ public class JwtUtils {
             }
         );
         //整合过期时间
-        builder.withExpiresAt(date);
+        //builder.withExpiresAt(date);暂时不用了，使用redis中的过期时间来管理
 
         //生成token
         String sign = builder.sign(Algorithm.HMAC256(SIGN));
@@ -50,8 +50,8 @@ public class JwtUtils {
     //解析token
     public static TokenResult parseToken(String token){
         DecodedJWT verify = JWT.require(Algorithm.HMAC256(SIGN)).build().verify(token);
-        String phone = verify.getClaim(JWT_KEY_PHONE).toString();
-        String identity = verify.getClaim(JWT_KEY_IDENTITY).toString();
+        String phone = verify.getClaim(JWT_KEY_PHONE).asString();
+        String identity = verify.getClaim(JWT_KEY_IDENTITY).asString();
         TokenResult tokenResult = new TokenResult();
         tokenResult.setPhone(phone);
         tokenResult.setIdentity(identity);
