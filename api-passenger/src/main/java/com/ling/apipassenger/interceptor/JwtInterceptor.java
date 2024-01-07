@@ -20,24 +20,25 @@ public class JwtInterceptor implements HandlerInterceptor {
         String resultString = "";
 
         String token = request.getHeader("Authorization");
-        try{
+        try {
             JwtUtils.parseToken(token);
-        }catch (SignatureVerificationException e){
+        } catch (SignatureVerificationException e) {
             resultString = "token sign error";
             result = false;
-        }catch (TokenExpiredException e){
+        } catch (TokenExpiredException e) {
             resultString = "token time out";
             result = false;
-        }catch (AlgorithmMismatchException e){
+        } catch (AlgorithmMismatchException e) {
             resultString = "token AlgorithmMismatchException";
             result = false;
-        }catch (Exception e){
+        } catch (Exception e) {
             resultString = "token invalid";
             result = false;
         }
-        if(!result){
+        if (!result) {
             PrintWriter out = response.getWriter();
             out.print(JSONObject.fromObject(ResponseResult.fail(resultString)).toString());
         }
         return true;
+    }
 }
