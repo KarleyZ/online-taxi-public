@@ -3,10 +3,12 @@ package com.ling.apipassenger.service;
 import com.ling.apipassenger.remote.ServicePassengerUserClient;
 import com.ling.apipassenger.remote.ServiceVerificationcodeClient;
 import com.ling.internalcommon.constant.CommonStatusEnum;
+import com.ling.internalcommon.constant.IdentityConstant;
 import com.ling.internalcommon.dto.ResponseResult;
 import com.ling.internalcommon.request.VerificationCodeDTO;
 import com.ling.internalcommon.response.NumberCodeResponse;
 import com.ling.internalcommon.response.TokenResponse;
+import com.ling.internalcommon.util.JwtUtils;
 import net.sf.json.JSONObject;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -78,8 +80,9 @@ public class VerificationCodeService {
 
         //根据手机号去redis获取验证码，需要先根据手机号生成key,根据key
         String key = generatorKeyByPhone(passengerPhone);
+
         String codeRedis = stringRedisTemplate.opsForValue().get(key);
-        System.out.println("redis中 " + passengerPhone + "保存的验证码是：" + codeRedis);
+        System.out.println("redis中 " + key + "保存的验证码是：" + codeRedis);
 
         //校验验证码是否正确
         //验证码不正确：不正确+过期两种情况
@@ -96,11 +99,13 @@ public class VerificationCodeService {
         verificationCodeDTO.setVerificationCode(verificationCode);
         //判断原来是否有该用户，有就登录，没有就添加用户
         servicePassengerUserClient.loginOrRegister(verificationCodeDTO);
-        //颁发令牌
+        //颁发令牌 JWT
+        String token = JwtUtils.generatorToken(passengerPhone, IdentityConstant.PASSENGER_IDENTITY);
+
 
         //相应的结果，要将token返回
         TokenResponse tokenResponse = new TokenResponse();
-        tokenResponse.setToken("token str");
+        tokenResponse.setToken(token);
         return ResponseResult.success(tokenResponse);
     }
 
