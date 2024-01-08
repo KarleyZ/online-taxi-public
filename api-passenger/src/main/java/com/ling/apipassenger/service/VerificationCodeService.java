@@ -3,14 +3,14 @@ package com.ling.apipassenger.service;
 import com.ling.apipassenger.remote.ServicePassengerUserClient;
 import com.ling.apipassenger.remote.ServiceVerificationcodeClient;
 import com.ling.internalcommon.constant.CommonStatusEnum;
-import com.ling.internalcommon.constant.IdentityConstant;
+import com.ling.internalcommon.constant.IdentityConstants;
+import com.ling.internalcommon.constant.TokenConstants;
 import com.ling.internalcommon.dto.ResponseResult;
 import com.ling.internalcommon.request.VerificationCodeDTO;
 import com.ling.internalcommon.response.NumberCodeResponse;
 import com.ling.internalcommon.response.TokenResponse;
 import com.ling.internalcommon.util.JwtUtils;
 import com.ling.internalcommon.util.RedisPrefixUtils;
-import net.sf.json.JSONObject;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -89,14 +89,24 @@ public class VerificationCodeService {
         //判断原来是否有该用户，有就登录，没有就添加用户
         servicePassengerUserClient.loginOrRegister(verificationCodeDTO);
         //颁发令牌 JWT
-        String token = JwtUtils.generatorToken(passengerPhone, IdentityConstant.PASSENGER_IDENTITY);
+        String accessToken = JwtUtils.generatorToken(passengerPhone, IdentityConstants.PASSENGER_IDENTITY, TokenConstants.ACCESS_TOKEN_TYPE);
+        String refreshToken = JwtUtils.generatorToken(passengerPhone, IdentityConstants.PASSENGER_IDENTITY,TokenConstants.REFRESH_TOKEN_TYPE);
+
         //将token存入redis方便之后的使用。
-        String tokenKey = RedisPrefixUtils.generatorToken(passengerPhone,IdentityConstant.PASSENGER_IDENTITY);
-        stringRedisTemplate.opsForValue().set(tokenKey,token,30,TimeUnit.DAYS);
+        String accessTokenKey = RedisPrefixUtils.generatorTokenKey(passengerPhone, IdentityConstants.PASSENGER_IDENTITY,TokenConstants.ACCESS_TOKEN_TYPE);
+        String refreshTokenKey = RedisPrefixUtils.generatorTokenKey(passengerPhone, IdentityConstants.PASSENGER_IDENTITY,TokenConstants.REFRESH_TOKEN_TYPE);
+        stringRedisTemplate.opsForValue().set(accessTokenKey,accessToken,30,TimeUnit.DAYS);
+        stringRedisTemplate.opsForValue().set(refreshTokenKey,refreshToken,31,TimeUnit.DAYS);
+
+        //测试用，过期时间快
+        //stringRedisTemplate.opsForValue().set(accessTokenKey,accessToken,25,TimeUnit.SECONDS);
+        //stringRedisTemplate.opsForValue().set(refreshTokenKey,refreshToken,35,TimeUnit.SECONDS);
+
 
         //相应的结果，要将token返回
         TokenResponse tokenResponse = new TokenResponse();
-        tokenResponse.setToken(token);
+        tokenResponse.setAccessToken(accessToken);
+        tokenResponse.setRefreshToken(refreshToken);
         return ResponseResult.success(tokenResponse);
     }
 

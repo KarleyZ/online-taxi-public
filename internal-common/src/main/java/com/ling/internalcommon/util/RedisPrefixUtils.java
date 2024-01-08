@@ -23,7 +23,7 @@ public class RedisPrefixUtils {
      * @param identity
      * @return
      */
-    public static String generatorToken(String passengerPhone, String identity){
-        return tokenPrefix + passengerPhone + "-" + identity;
+    public static String generatorTokenKey(String passengerPhone, String identity, String tokenType){
+        return tokenPrefix + passengerPhone + "-" + identity + "-" + tokenType;
     }
 }
