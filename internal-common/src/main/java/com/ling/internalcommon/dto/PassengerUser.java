@@ -21,4 +21,6 @@ public class PassengerUser {
     private byte passengerGender;
     //乘客状态：0有效；1失效
     private byte state;
+    //用户头像信息
+    private String profilePhoto;
 }

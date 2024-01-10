@@ -25,7 +25,12 @@ public enum CommonStatusEnum {
     /**
      * token检查时出错。
      */
-    TOKEN_ERROR(1199,"token error")
+    TOKEN_ERROR(1199,"token error"),
+
+    /**
+     * 用户不存在
+     */
+    UESR_NOT_EXISTS(1200,"user is not exists")
     ;
 
     @Getter

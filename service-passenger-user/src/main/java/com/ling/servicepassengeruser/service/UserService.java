@@ -1,5 +1,6 @@
 package com.ling.servicepassengeruser.service;
 
+import com.ling.internalcommon.constant.CommonStatusEnum;
 import com.ling.internalcommon.dto.PassengerUser;
 import com.ling.internalcommon.dto.ResponseResult;
 import com.ling.servicepassengeruser.mapper.PassengerUserMapper;
@@ -41,5 +42,19 @@ public class UserService {
 
 
         return ResponseResult.success();
+    }
+
+    public ResponseResult getUserByPhone(String passengerPhone){
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("passenger_phone",passengerPhone);
+        List<PassengerUser> passengerUsers = passengerUserMapper.selectByMap(map);
+        if(passengerUsers.isEmpty()){
+            return ResponseResult.fail(CommonStatusEnum.UESR_NOT_EXISTS.getCode(),CommonStatusEnum.UESR_NOT_EXISTS.getValue());
+        }else {
+            PassengerUser passengerUser = passengerUsers.get(0);
+            return  ResponseResult.success(passengerUser);
+        }
+
     }
 }
