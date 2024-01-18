@@ -30,7 +30,12 @@ public enum CommonStatusEnum {
     /**
      * 用户不存在
      */
-    UESR_NOT_EXISTS(1200,"user is not exists")
+    UESR_NOT_EXISTS(1200,"user is not exists"),
+
+    /**
+     * 计价规则不存在
+     */
+    PRICE_RULE_EMPTY(1300,"计价规则不存在")
     ;
 
     @Getter
