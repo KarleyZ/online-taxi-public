@@ -35,7 +35,36 @@ public enum CommonStatusEnum {
     /**
      * 计价规则不存在
      */
-    PRICE_RULE_EMPTY(1300,"计价规则不存在")
+    PRICE_RULE_EMPTY(1300,"计价规则不存在"),
+
+    /**
+     * 请求高德行政区域API错误
+     */
+    MAP_DISTRICT_ERROR(1400,"请求高德行政区域API错误"),
+    /**
+     * 司机和车辆关系不存在错误
+     */
+    DRIVER_CAR_BIND_NOT_EXISTS(1500,"司机和车辆关系不存在"),
+    /**
+     * 司机和车辆绑定关系已存在,重复绑定错误
+     */
+    DRIVER_CAR_BIND_EXISTS(1502,"司机和车辆绑定关系已存在，请勿重复绑定"),
+    /**
+     * 司机已绑定车辆，请勿重复绑定
+     */
+    DRIVER_BIND_EXISTS(1503,"司机已绑定车辆，请勿重复绑定"),
+    /**
+     * 司机已绑定车辆，请勿重复绑定
+     */
+    CAR_BIND_EXISTS(1504,"车辆已绑定司机，请勿重复绑定"),
+    /**
+     * 司机已绑定车辆，请勿重复绑定
+     */
+    DRIVER_BIND_NOT_EXISTS(1505,"该司机与车辆的绑定关系不存在"),
+    /**
+     * 司机不存在
+     */
+    DRIVER_NOT_EXISTS(1501,"司机不存在")
     ;
 
     @Getter

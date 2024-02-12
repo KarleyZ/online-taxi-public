@@ -14,6 +14,12 @@ spring:
     host: 127.0.0.1
     port: 6379
     database: 0
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/service-map?characterEncoding=utf-8&serverTimezone=GMT%2B8
+    username: root
+    password: 123456
 
+#高德地图调用的key
 amap:
   key: 913695d50e30fec17ec162e57bc3eb96
