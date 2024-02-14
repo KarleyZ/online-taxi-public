@@ -16,7 +16,7 @@ public class UserController {
     public ResponseResult LoginOrRegister(@RequestBody VerificationCodeDTO verificationCodeDTO){
 
         String passengerPhone = verificationCodeDTO.getPassengerPhone();
-        System.out.println("service-passenger-user中的乘客手机号：" + passengerPhone);
+        System.out.println("service-driver-user中的乘客手机号：" + passengerPhone);
         return userService.LoginOrRegister(passengerPhone);
     }
 

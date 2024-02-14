@@ -3,8 +3,10 @@ package com.ling.servicedriveruser.service;
 import com.ling.internalcommon.constant.CommonStatusEnum;
 import com.ling.internalcommon.constant.DriverCarConstants;
 import com.ling.internalcommon.dto.DriverUser;
+import com.ling.internalcommon.dto.DriverUserWorkStatus;
 import com.ling.internalcommon.dto.ResponseResult;
 import com.ling.servicedriveruser.mapper.DriverUserMapper;
+import com.ling.servicedriveruser.mapper.DriverUserWorkStatusMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +20,9 @@ public class DriverUserService {
     @Autowired
     private DriverUserMapper driverUserMapper;
 
+    @Autowired
+    private DriverUserWorkStatusMapper driverUserWorkStatusMapper;
+
     public ResponseResult insertUser(DriverUser driverUser){
 
         LocalDateTime now = LocalDateTime.now();
@@ -25,6 +30,15 @@ public class DriverUserService {
         driverUser.setGmtModified(now);
 
         driverUserMapper.insert(driverUser);
+
+        //在成功添加driver后，在driver_user_work_status表中初始化该driver的工作状态的记录
+        DriverUserWorkStatus driverUserWorkStatus = new DriverUserWorkStatus();
+        driverUserWorkStatus.setDriverId(driverUser.getId());
+        driverUserWorkStatus.setWorkStatus(DriverCarConstants.DRIVER_WORK_STATUS_START);
+        driverUserWorkStatus.setGmtCreate(now);
+        driverUserWorkStatus.setGmtModified(now);
+        driverUserWorkStatusMapper.insert(driverUserWorkStatus);
+
         return ResponseResult.success("");
     }
 
