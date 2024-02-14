@@ -3,17 +3,17 @@ package com.ling.internalcommon.util;
 public class RedisPrefixUtils {
 
     //存入redis的key的前缀
-    public static String verificationCodePrefix ="passenger-verification-code-";
+    public static String verificationCodePrefix ="verification-code-";
 
     public static String tokenPrefix = "token-";
 
     /**
      * 根据手机号生成redis中的key
-     * @param passengerPhone
+     * @param phone
      * @return
      */
-    public static String generatorKeyByPhone(String passengerPhone){
-        String key = verificationCodePrefix + passengerPhone;
+    public static String generatorKeyByPhone(String phone,String identity){
+        String key = verificationCodePrefix + identity + "-" + phone;
         return key;
     }
 

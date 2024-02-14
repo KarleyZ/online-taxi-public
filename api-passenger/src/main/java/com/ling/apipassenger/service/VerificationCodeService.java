@@ -48,7 +48,7 @@ public class VerificationCodeService {
         //存验证码到redis
         //System.out.println("存验证码到redis");
         //存入redis需要什么：key,value和ktl
-        String key = RedisPrefixUtils.generatorKeyByPhone(passengerPhone);
+        String key = RedisPrefixUtils.generatorKeyByPhone(passengerPhone,IdentityConstants.PASSENGER_IDENTITY);
         stringRedisTemplate.opsForValue().set(key,numberCode+"",2,TimeUnit.MINUTES);
 
         //通过短信服务商将短信发送给乘客，阿里短信服务，腾讯短信通，华信，容联
@@ -68,7 +68,7 @@ public class VerificationCodeService {
     public ResponseResult checkCode(String passengerPhone, String verificationCode){
 
         //根据手机号去redis获取验证码，需要先根据手机号生成key,根据key
-        String key = RedisPrefixUtils.generatorKeyByPhone(passengerPhone);
+        String key = RedisPrefixUtils.generatorKeyByPhone(passengerPhone,IdentityConstants.PASSENGER_IDENTITY);
 
         String codeRedis = stringRedisTemplate.opsForValue().get(key);
         System.out.println("redis中 " + key + "保存的验证码是：" + codeRedis);

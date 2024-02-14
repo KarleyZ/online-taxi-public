@@ -28,7 +28,7 @@ public class DriverCarBindingRelationship implements Serializable {
     /**
      * carid
      */
-    private Integer carId;
+    private Long carId;
 
     private Integer bindState;
 
