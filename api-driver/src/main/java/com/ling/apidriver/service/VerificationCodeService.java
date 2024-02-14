@@ -60,7 +60,7 @@ public class VerificationCodeService {
 
     /**
      * 校验验证码
-     * @param passengerPhone
+     * @param driverPhone
      * @param verificationCode
      * @return
      */
