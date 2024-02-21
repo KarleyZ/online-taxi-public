@@ -7,6 +7,13 @@ public class AmapConfigConstants {
 
     //高德地图API行政区域的url通用部分
     public static final String DISTRICT_URL = "https://restapi.amap.com/v3/config/district";
+
+    //高德地图中猎鹰系统的url通用部分：服务的创建
+    public static final String SERVICE_ADD_URL = "https://tsapi.amap.com/v1/track/service/add";
+
+    //高德地图中猎鹰系统的url通用部分：terminal的创建
+    public static final String TERMINAL_ADD_URL = "https://tsapi.amap.com/v1/track/terminal/add";
+
     /**
      * 路径规划 json key值
      */

@@ -1,0 +1,29 @@
+猎鹰系统：
+service的创建返回结果：
+{
+    "errcode": 10000,
+    "errmsg": "OK",
+    "data": {
+        "name": "飞滴出行service",
+        "sid": 1019245
+    }
+}
+terminal的创建返回结果：
+{
+    "errcode": 10000,
+    "errmsg": "OK",
+    "data": {
+        "name": "car1",
+        "tid": 841679701,
+        "sid": 1019245
+    }
+}
+trace的创建的返回结果：
+{
+    "errcode": 10000,
+    "errmsg": "OK",
+    "data": {
+        "trname": "car1_trace1",
+        "trid": 20
+    }
+}
