@@ -13,8 +13,13 @@ public class AmapConfigConstants {
 
     //高德地图中猎鹰系统的url通用部分：terminal的创建
     public static final String TERMINAL_ADD_URL = "https://tsapi.amap.com/v1/track/terminal/add";
+
     //高德地图中猎鹰系统的url通用部分：trace的创建
     public static final String Trace_ADD_URL =  "https://tsapi.amap.com/v1/track/trace/add";
+
+    //高德地图中猎鹰系统的url通用部分：轨迹的上传
+    public static final String POINT_UPLOAD_URL = "https://tsapi.amap.com/v1/track/point/upload";
+
     /**
      * 路径规划 json key值
      */
@@ -32,4 +37,10 @@ public class AmapConfigConstants {
     public static final String ADNAME = "name";
     public static final String LEVEL = "level";
     public static final String STREET = "street";
+
+    /**
+     * 猎鹰轨迹上传时可上传的参数名(URL)
+     */
+    public static final String TRACE_LOCATION = "%22location%22";
+    public static final String TRACE_LOCATION_TIME = "%22locationtime%22";
 }
