@@ -172,6 +172,21 @@ public class Car implements Serializable {
     private Integer state;
 
     /**
+     * 车辆终端的tid号
+     */
+    private String tid;
+
+    /**
+     * 车辆轨迹的trid号
+     */
+    private String trid;
+
+    /**
+     * 车辆轨迹的名称
+     */
+    private String trname;
+
+    /**
      * 创建时间
      */
     private LocalDateTime gmtCreate;

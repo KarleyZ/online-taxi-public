@@ -2,7 +2,10 @@ package com.ling.servicedriveruser.service;
 
 import com.ling.internalcommon.dto.Car;
 import com.ling.internalcommon.dto.ResponseResult;
+import com.ling.internalcommon.response.MapTerminalResponse;
+import com.ling.internalcommon.response.MapTrackResponse;
 import com.ling.servicedriveruser.mapper.CarMapper;
+import com.ling.servicedriveruser.remote.ServiceMapClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,11 +17,28 @@ public class CarService {
     @Autowired
     private CarMapper carMapper;
 
+    @Autowired
+    ServiceMapClient serviceMapClient;
+
     public ResponseResult addCar(Car car){
 
         LocalDateTime now = LocalDateTime.now();
         car.setGmtCreate(now);
         car.setGmtModified(now);
+
+        //根据car的来创建有关这辆车的终端，并一起写入数据库。
+        ResponseResult<MapTerminalResponse> responseResult = serviceMapClient.addTerminal(car.getVehicleNo());
+        String tid = responseResult.getData().getTid();
+
+        car.setTid(tid);
+
+        //获得此车的轨迹trid
+        ResponseResult<MapTrackResponse> trackResponseResponseResult = serviceMapClient.addTrack(tid);
+        String trid = trackResponseResponseResult.getData().getTrid();
+        String trname = trackResponseResponseResult.getData().getTrname();
+        car.setTrid(trid);
+        car.setTrname(trname);
+
         carMapper.insert(car);
         return ResponseResult.success();
     }

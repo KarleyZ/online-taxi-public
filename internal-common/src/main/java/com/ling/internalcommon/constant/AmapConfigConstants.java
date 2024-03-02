@@ -13,7 +13,8 @@ public class AmapConfigConstants {
 
     //高德地图中猎鹰系统的url通用部分：terminal的创建
     public static final String TERMINAL_ADD_URL = "https://tsapi.amap.com/v1/track/terminal/add";
-
+    //高德地图中猎鹰系统的url通用部分：trace的创建
+    public static final String Trace_ADD_URL =  "https://tsapi.amap.com/v1/track/trace/add";
     /**
      * 路径规划 json key值
      */
