@@ -20,6 +20,9 @@ public class AmapConfigConstants {
     //高德地图中猎鹰系统的url通用部分：轨迹的上传
     public static final String POINT_UPLOAD_URL = "https://tsapi.amap.com/v1/track/point/upload";
 
+    //高德地图中猎鹰系统的url通用部分：终端的周边搜索
+    public static final String TERMINAL_AROUND_SEARCH_URL = "https://tsapi.amap.com/v1/track/terminal/aroundsearch";
+
     /**
      * 路径规划 json key值
      */
