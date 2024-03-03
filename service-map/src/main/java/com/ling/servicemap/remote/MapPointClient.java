@@ -49,7 +49,7 @@ public class MapPointClient {
             url.append(AmapConfigConstants.TRACE_LOCATION);
             url.append("%3A");
             url.append("%22" + location + "%22");//"
-            url.append("%B4");//,
+            url.append("%2C");//,
             url.append(AmapConfigConstants.TRACE_LOCATION_TIME);
             url.append("%3A");//:
             url.append("%22" + locatetime + "%22");
