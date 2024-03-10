@@ -23,7 +23,7 @@ public class UserService {
         TokenResult tokenResult = JwtUtils.checkToken(accessToken);
         String phone = tokenResult.getPhone();
 
-        ResponseResult result = servicePassengerUserClient.getUserByPhone(phone);
+        ResponseResult<PassengerUser> result = servicePassengerUserClient.getUserByPhone(phone);
 
         return ResponseResult.success(result.getData());
     }

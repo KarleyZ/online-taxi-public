@@ -7,6 +7,10 @@ import java.time.LocalDateTime;
 
 @Data
 public class OrderRequest {
+    //乘客id
+    private Long passengerId;
+    //乘客电话
+     private String passengerPhone;
     //区域标识
     private String address;
     //出发时间
