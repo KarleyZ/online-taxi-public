@@ -20,19 +20,18 @@ public class PriceService {
      * @param destLatitude
      * @return
      */
-    public ResponseResult forecastPrice(String depLongitude, String depLatitude, String destLongitude, String destLatitude){
+    public ResponseResult forecastPrice(String depLongitude, String depLatitude, String destLongitude, String destLatitude,
+                                        String cityCode, String vehicleType){
 
         LocationInformationDTO locationInformationDTO = new LocationInformationDTO();
         locationInformationDTO.setDepLongitude(depLongitude);
         locationInformationDTO.setDepLatitude(depLatitude);
         locationInformationDTO.setDestLongitude(destLongitude);
         locationInformationDTO.setDestLatitude(destLatitude);
+        locationInformationDTO.setCityCode(cityCode);
+        locationInformationDTO.setVehicleType(vehicleType);
 
         ResponseResult<ForecastPriceResponse> responseResult = servicePriceClient.forecastPrice(locationInformationDTO);
-        double price = responseResult.getData().getPrice();
-
-        ForecastPriceResponse forecastPriceResponse = new ForecastPriceResponse();
-        forecastPriceResponse.setPrice(price);
-        return ResponseResult.success(forecastPriceResponse);
+        return ResponseResult.success(responseResult.getData());
     }
 }

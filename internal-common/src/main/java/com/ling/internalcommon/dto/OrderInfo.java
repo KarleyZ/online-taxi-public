@@ -99,6 +99,10 @@ public class OrderInfo implements Serializable {
     private Integer encrypt;
 
     /**
+     * 运价类型版本
+     */
+    private Integer fareVersion;
+    /**
      * 运价类型编码
      */
     private String fareType;

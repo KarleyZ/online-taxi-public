@@ -23,7 +23,8 @@ public class PriceController {
         log.info("出发地位置"+ locationInformationDTO.getDepLongitude() + "," + locationInformationDTO.getDepLatitude());
         log.info("目的地位置"+ locationInformationDTO.getDestLongitude() + "," + locationInformationDTO.getDestLatitude());
 
-        return priceService.forecastPrice(locationInformationDTO.getDepLongitude(), locationInformationDTO.getDepLatitude(), locationInformationDTO.getDestLongitude(), locationInformationDTO.getDestLatitude());
+        return priceService.forecastPrice(locationInformationDTO.getDepLongitude(), locationInformationDTO.getDepLatitude(), locationInformationDTO.getDestLongitude(), locationInformationDTO.getDestLatitude(),
+                locationInformationDTO.getCityCode(),locationInformationDTO.getVehicleType());
 
 
     }
