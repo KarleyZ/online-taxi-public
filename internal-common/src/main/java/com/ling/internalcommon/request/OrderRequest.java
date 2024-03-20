@@ -42,5 +42,10 @@ public class OrderRequest {
     private Integer encrypt;
     //计价类型
     private String fareType;
+    //计价类型版本
+    private Integer fareVersion;
+
+    //请求设备唯一码
+    private String deviceCode;
 
 }

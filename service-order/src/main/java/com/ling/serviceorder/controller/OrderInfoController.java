@@ -1,11 +1,15 @@
 package com.ling.serviceorder.controller;
 
 
+import com.ling.internalcommon.constant.HeaderParamConstants;
 import com.ling.internalcommon.dto.ResponseResult;
 import com.ling.internalcommon.request.OrderRequest;
 import com.ling.serviceorder.service.OrderInfoService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * <p>
@@ -17,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
  */
 @RestController
 @RequestMapping("/order")
+@Slf4j
 public class OrderInfoController {
 
     @Autowired
@@ -27,8 +32,11 @@ public class OrderInfoController {
      * @return
      */
     @PostMapping("/add")
-    public ResponseResult add(@RequestBody OrderRequest orderRequest){
-
+    public ResponseResult add(@RequestBody OrderRequest orderRequest, HttpServletRequest httpServletRequest){
+        //扩展从header中获取设备码
+        /*String deviceCode = httpServletRequest.getHeader(HeaderParamConstants.DEVICE_CODE);
+        log.info("deviceCode:"+deviceCode);
+        orderRequest.setDeviceCode(deviceCode);*/
         return orderInfoService.add(orderRequest);
     }
 

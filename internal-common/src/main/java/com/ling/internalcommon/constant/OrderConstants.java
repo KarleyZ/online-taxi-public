@@ -3,6 +3,7 @@ package com.ling.internalcommon.constant;
 public class OrderConstants {
     /**
      * 订单状态
+     * 0: 订单无效（没叫到司机）
      * 1：订单开始
      * 2：司机接单
      * 3：司机出发去接乘客
@@ -13,6 +14,7 @@ public class OrderConstants {
      * 8：乘客支付完成
      * 9：订单取消
      */
+    public static final int ORDER_INVALID = 0;
     public static final int ORDER_START = 1;
     public static final int RECEIVE_ORDER = 2;
     public static final int DRIVER_TO_PICK_UP_PASSENGER = 3;

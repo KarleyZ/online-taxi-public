@@ -44,6 +44,10 @@ public enum CommonStatusEnum {
      * 计价规则没有变化
      */
     PRICE_RULE_NOT_EDIT(1302,"计价规则没有变化"),
+    /**
+     * 计价规则有变，当前使用的的不是最新版本的计价规则
+     */
+    PRICE_RULE_CHANGED(1302,"计价规则有变，当前使用的的不是最新版本的计价规则"),
 
     /**
      * 请求高德行政区域API错误
@@ -72,7 +76,15 @@ public enum CommonStatusEnum {
     /**
      * 司机不存在
      */
-    DRIVER_NOT_EXISTS(1501,"司机不存在")
+    DRIVER_NOT_EXISTS(1501,"司机不存在"),
+    /**
+     * 有正在进行的订单
+     */
+    ORDER_GOING_ON(1600,"有正在进行的订单"),
+    /**
+     * 黑名单设备多次下单
+     */
+    DEVICE_IS_BLACK(1601,"该设备超过下单次数")
     ;
 
     @Getter
