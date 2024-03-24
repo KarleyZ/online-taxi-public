@@ -84,7 +84,15 @@ public enum CommonStatusEnum {
     /**
      * 黑名单设备多次下单
      */
-    DEVICE_IS_BLACK(1601,"该设备超过下单次数")
+    DEVICE_IS_BLACK(1601,"该设备超过下单次数"),
+    /**
+     * 打车服务某地未开通
+     */
+    CITY_SERVICE_NOT_EXISTS(1602,"当前城市不提供叫车服务"),
+    /**
+     * 当前城市没有可用的司机
+     */
+    CITY_DRIVER_EMPTY(1603,"当前城市没有可用的司机")
     ;
 
     @Getter

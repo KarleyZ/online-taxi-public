@@ -19,7 +19,7 @@ public class TerminalService {
         return terminalClient.add(name,desc);
     }
 
-    public ResponseResult<List<MapTerminalResponse>> aroundSearch(String center, String radius){
+    public ResponseResult<List<MapTerminalResponse>> aroundSearch(String center, Integer radius){
 
         return terminalClient.aroundSearch(center,radius);
     }

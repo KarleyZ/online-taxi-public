@@ -10,5 +10,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 public interface ServicePriceClient {
 
     @RequestMapping(method = RequestMethod.GET,value = "/price-rule/is-new")
-    public ResponseResult<Boolean> isNew(@RequestParam String fareType,@RequestParam Integer fareVersion);
+    public ResponseResult isNew(@RequestParam String fareType,@RequestParam Integer fareVersion);
+
+    @RequestMapping(method = RequestMethod.GET,value = "/price-rule/if-exist")
+    public ResponseResult<Boolean> ifExists(@RequestParam String cityCode,@RequestParam String vehicleType);
+
 }

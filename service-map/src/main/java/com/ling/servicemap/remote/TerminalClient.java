@@ -53,7 +53,7 @@ public class TerminalClient {
         return ResponseResult.success(mapTerminalResponse);
     }
 
-    public ResponseResult<List<MapTerminalResponse>> aroundSearch(String center,String radius){
+    public ResponseResult<List<MapTerminalResponse>> aroundSearch(String center,Integer radius){
         StringBuilder url = new StringBuilder();
         url.append(AmapConfigConstants.TERMINAL_AROUND_SEARCH_URL);
         url.append("?");
@@ -82,7 +82,9 @@ public class TerminalClient {
             MapTerminalResponse terminalResponse = new MapTerminalResponse();
             JSONObject jsonObject = results.getJSONObject(i);
             String tid = jsonObject.getString("tid");
-            Long carId = jsonObject.getLong("desc");
+            //Long carId = jsonObject.getLong("desc");
+            String desc = jsonObject.getString("desc");
+            Long carId = Long.parseLong(desc);
 
             terminalResponse.setTid(tid);
             terminalResponse.setCarId(carId);

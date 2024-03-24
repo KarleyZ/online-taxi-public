@@ -30,7 +30,7 @@ public class PriceRuleService {
         //拼接fareType
         String cityCode = priceRule.getCityCode();
         String vehicleType = priceRule.getVehicleType();
-        String fareType = cityCode + vehicleType;
+        String fareType = cityCode +"$"+ vehicleType;
         priceRule.setFareType(fareType);
 
         //添加版本号
@@ -54,7 +54,7 @@ public class PriceRuleService {
         //拼接fareType
         String cityCode = priceRule.getCityCode();
         String vehicleType = priceRule.getVehicleType();
-        String fareType = cityCode + vehicleType;
+        String fareType = cityCode + "$" + vehicleType;
         priceRule.setFareType(fareType);
 
         //添加版本号
@@ -101,17 +101,18 @@ public class PriceRuleService {
         }
     }
 
-    public ResponseResult<Boolean> isNew(String fareType,int fareVersion){
+    public ResponseResult isNew(String fareType,int fareVersion){
         ResponseResult<PriceRule> newestVersionPriceRule = getNewestVersion(fareType);
         if(newestVersionPriceRule.getCode() == CommonStatusEnum.PRICE_RULE_EMPTY.getCode()){
             return ResponseResult.fail(CommonStatusEnum.PRICE_RULE_EMPTY.getCode(),CommonStatusEnum.PRICE_RULE_EMPTY.getValue());
+            //return ResponseResult.success(false);
         }
         PriceRule priceRule = newestVersionPriceRule.getData();
         Integer fareVersionDB = priceRule.getFareVersion();
         if(fareVersionDB > fareVersion){
-            return ResponseResult.success(false);
+            return ResponseResult.fail(CommonStatusEnum.PRICE_RULE_CHANGED.getCode(),CommonStatusEnum.PRICE_RULE_CHANGED.getValue());
         }else {
-            return ResponseResult.success(true);
+            return ResponseResult.success("");
         }
     }
 

@@ -45,5 +45,5 @@ public class AmapConfigConstants {
      * 猎鹰轨迹上传时可上传的参数名(URL)
      */
     public static final String TRACE_LOCATION = "%22location%22";
-    public static final String TRACE_LOCATION_TIME = "%22locationtime%22";
+    public static final String TRACE_LOCATION_TIME = "%22locatetime%22";
 }
