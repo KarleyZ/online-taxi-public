@@ -53,10 +53,15 @@ public enum CommonStatusEnum {
      * 请求高德行政区域API错误
      */
     MAP_DISTRICT_ERROR(1400,"请求高德行政区域API错误"),
+
     /**
-     * 司机和车辆关系不存在错误
+     * 该司机与车辆的绑定关系不存在
      */
-    DRIVER_CAR_BIND_NOT_EXISTS(1500,"司机和车辆关系不存在"),
+    DRIVER_BIND_NOT_EXISTS(1500,"该司机与车辆的绑定关系不存在"),
+    /**
+     * 司机不存在
+     */
+    DRIVER_NOT_EXISTS(1501,"司机不存在"),
     /**
      * 司机和车辆绑定关系已存在,重复绑定错误
      */
@@ -70,13 +75,13 @@ public enum CommonStatusEnum {
      */
     CAR_BIND_EXISTS(1504,"车辆已绑定司机，请勿重复绑定"),
     /**
-     * 司机已绑定车辆，请勿重复绑定
+     * 当前城市没有可用的司机
      */
-    DRIVER_BIND_NOT_EXISTS(1505,"该司机与车辆的绑定关系不存在"),
+    CITY_DRIVER_EMPTY(1506,"当前城市没有可用的司机"),
     /**
-     * 司机不存在
+     * 根据车辆查到的司机不可用
      */
-    DRIVER_NOT_EXISTS(1501,"司机不存在"),
+    AVAILABLE_DRIVER_EMPTY(1507,"当前没有可用的司机"),
     /**
      * 有正在进行的订单
      */
@@ -88,11 +93,7 @@ public enum CommonStatusEnum {
     /**
      * 打车服务某地未开通
      */
-    CITY_SERVICE_NOT_EXISTS(1602,"当前城市不提供叫车服务"),
-    /**
-     * 当前城市没有可用的司机
-     */
-    CITY_DRIVER_EMPTY(1603,"当前城市没有可用的司机")
+    CITY_SERVICE_NOT_EXISTS(1602,"当前城市不提供叫车服务")
     ;
 
     @Getter
