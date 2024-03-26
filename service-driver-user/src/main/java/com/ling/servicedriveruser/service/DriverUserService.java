@@ -3,11 +3,9 @@ package com.ling.servicedriveruser.service;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.ling.internalcommon.constant.CommonStatusEnum;
 import com.ling.internalcommon.constant.DriverCarConstants;
-import com.ling.internalcommon.dto.DriverCarBindingRelationship;
-import com.ling.internalcommon.dto.DriverUser;
-import com.ling.internalcommon.dto.DriverUserWorkStatus;
-import com.ling.internalcommon.dto.ResponseResult;
+import com.ling.internalcommon.dto.*;
 import com.ling.internalcommon.response.OrderDriverResponse;
+import com.ling.servicedriveruser.mapper.CarMapper;
 import com.ling.servicedriveruser.mapper.DriverCarBindingRelationshipMapper;
 import com.ling.servicedriveruser.mapper.DriverUserMapper;
 import com.ling.servicedriveruser.mapper.DriverUserWorkStatusMapper;
@@ -29,6 +27,9 @@ public class DriverUserService {
 
     @Autowired
     private DriverUserWorkStatusMapper driverUserWorkStatusMapper;
+
+    @Autowired
+    private CarMapper carMapper;
 
     public ResponseResult insertUser(DriverUser driverUser){
 
@@ -98,9 +99,17 @@ public class DriverUserService {
             if(null == driverUser){
                 return ResponseResult.fail(CommonStatusEnum.AVAILABLE_DRIVER_EMPTY.getCode(),CommonStatusEnum.AVAILABLE_DRIVER_EMPTY.getValue());
             }else{
+                //查询车辆信息
+                QueryWrapper<Car> carQueryWrapper = new QueryWrapper<Car>();
+                carQueryWrapper.eq("id",carId);
+                Car car = carMapper.selectOne(carQueryWrapper);
+
                 OrderDriverResponse orderDriverResponse = new OrderDriverResponse();
                 orderDriverResponse.setDriverPhone(driverUser.getDriverPhone());
                 orderDriverResponse.setDriverId(driverId);
+                orderDriverResponse.setLicenseId(driverUser.getLicenseId());
+                orderDriverResponse.setVehicleNo(car.getVehicleNo());
+                orderDriverResponse.setCarId(carId);
                 return ResponseResult.success(orderDriverResponse);
             }
         }

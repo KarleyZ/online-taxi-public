@@ -4,11 +4,13 @@ package com.ling.serviceorder.service;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.ling.internalcommon.constant.CommonStatusEnum;
 import com.ling.internalcommon.constant.OrderConstants;
+import com.ling.internalcommon.dto.Car;
 import com.ling.internalcommon.dto.ResponseResult;
 import com.ling.internalcommon.request.OrderRequest;
 import com.ling.internalcommon.dto.OrderInfo;
 import com.ling.internalcommon.request.PriceRuleIsNewRequest;
 import com.ling.internalcommon.response.MapTerminalResponse;
+import com.ling.internalcommon.response.OrderDriverResponse;
 import com.ling.internalcommon.util.RedisPrefixUtils;
 import com.ling.serviceorder.mapper.OrderInfoMapper;
 import com.ling.serviceorder.remote.ServiceDriverUserClient;
@@ -65,8 +67,8 @@ public class OrderInfoService {
             return aNew;
         }
 
-        //判断有正在进行的订单不允许下单
-        if(HasOngoingOrders(orderRequest.getPassengerId())){
+        //判断乘客有正在进行的订单不允许下单
+        if(HasPassengerOngoingOrders(orderRequest.getPassengerId())){
             return ResponseResult.fail(CommonStatusEnum.ORDER_GOING_ON.getCode(),CommonStatusEnum.ORDER_GOING_ON.getValue());
         }
         //判断下单的设备是否是黑名单设备
@@ -107,6 +109,7 @@ public class OrderInfoService {
         radiusList.add(2000);
         radiusList.add(4000);
         radiusList.add(5000);
+        radius:
         for (int i = 0; i < radiusList.size(); i++) {
             listResponseResult = serviceMapClient.aroundSearch(center, radiusList.get(i));
             //获得终端
@@ -119,16 +122,47 @@ public class OrderInfoService {
                 JSONObject jsonObject = result.getJSONObject(j);
                 String carIdString = jsonObject.getString("carId");
                 long carId = Long.parseLong(carIdString);
+                Long longitude = jsonObject.getLong("longitude");
+                Long latitude = jsonObject.getLong("latitude");
 
                 //查询是否有可派单的司机。
+                ResponseResult<OrderDriverResponse> availableDriver = serviceDriverUserClient.getAvailableDriver(carId);
 
+                if(availableDriver.getCode() == CommonStatusEnum.AVAILABLE_DRIVER_EMPTY.getCode()){
+                    log.info("没有车辆"+carId+"对应的司机");
+                    continue;
+                }else {
+                    log.info("找到了正在出车的司机" + carId);
+                    //判断司机是否有正在进行的订单
+                    OrderDriverResponse orderDriverResponse = availableDriver.getData();
+                    Long driverId = orderDriverResponse.getDriverId();
+                    if(HasDriverOngoingOrders(driverId)){
+                        continue;
+                    }
+                    //补全订单中有关司机的信息
+                    //查询当前车辆信息
+                    orderInfo.setDriverId(driverId);
+                    orderInfo.setDriverPhone(orderDriverResponse.getDriverPhone());
+                    orderInfo.setCarId(carId);
+                    orderInfo.setReceiveOrderCarLongitude(longitude+"");
+                    orderInfo.setReceiveOrderCarLatitude(latitude+"");
+                    orderInfo.setReceiveOrderTime(LocalDateTime.now());
+                    orderInfo.setLicenseId(orderDriverResponse.getLicenseId());
+                    orderInfo.setVehicleNo(orderDriverResponse.getVehicleNo());
+                    orderInfo.setOrderStatus(OrderConstants.RECEIVE_ORDER);
+
+                    orderInfoMapper.updateById(orderInfo);
+
+                    //退出不再进行司机的查找
+                    break radius;
+                }
             }
 
         }
 
     }
 
-    public Boolean HasOngoingOrders(Long passengerId){
+    public Boolean HasPassengerOngoingOrders(Long passengerId){
         QueryWrapper<OrderInfo> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("passenger_id",passengerId);
         queryWrapper.and(wrapper->wrapper.eq("order_status",OrderConstants.ORDER_START)
@@ -178,5 +212,21 @@ public class OrderInfoService {
         ResponseResult<Boolean> result = serviceDriverUserClient.isAvailableDriver(cityCode);
         log.info("当前城市司机状态" + result.getData());
         return result.getData();
+    }
+
+    public Boolean HasDriverOngoingOrders(Long driverId){
+        QueryWrapper<OrderInfo> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("driver_id",driverId);
+        queryWrapper.and(wrapper->wrapper.eq("order_status",OrderConstants.RECEIVE_ORDER)
+                .or().eq("order_status",OrderConstants.DRIVER_TO_PICK_UP_PASSENGER)
+                .or().eq("order_status",OrderConstants.DRIVER_ARRIVED_DEPARTURE)
+                .or().eq("order_status",OrderConstants.PICK_UP_PASSENGER)
+        );
+        Integer vaildOrderCount = orderInfoMapper.selectCount(queryWrapper);
+        log.info("司机"+ driverId +"正在进行的订单数"+vaildOrderCount);
+        if(vaildOrderCount >0){
+            return true;
+        }
+        return false;
     }
 }

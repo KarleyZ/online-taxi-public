@@ -44,6 +44,7 @@ public class TerminalClient {
 
         ResponseEntity<String> postForEntity = restTemplate.postForEntity(url.toString(), null, String.class);
         String body = postForEntity.getBody();
+        log.info("创建终端的结果"+body);
         JSONObject result = JSONObject.fromObject(body);
         JSONObject data = result.getJSONObject("data");
         String tid = data.getString("tid");
@@ -82,12 +83,20 @@ public class TerminalClient {
             MapTerminalResponse terminalResponse = new MapTerminalResponse();
             JSONObject jsonObject = results.getJSONObject(i);
             String tid = jsonObject.getString("tid");
+            //desc存的carId
             //Long carId = jsonObject.getLong("desc");
             String desc = jsonObject.getString("desc");
             Long carId = Long.parseLong(desc);
 
+            JSONObject location = jsonObject.getJSONObject("location");
+            Long longitude = location.getLong("longitude");
+            Long latitude = location.getLong("latitude");
+
             terminalResponse.setTid(tid);
             terminalResponse.setCarId(carId);
+            terminalResponse.setLongitude(longitude);
+            terminalResponse.setLatitude(latitude);
+
             terminals.add(terminalResponse);
         }
 

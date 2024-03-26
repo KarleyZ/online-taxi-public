@@ -8,4 +8,8 @@ public class MapTerminalResponse {
     private String tid;
 
     private Long carId;
+
+    private Long longitude;
+
+    private Long latitude;
 }
