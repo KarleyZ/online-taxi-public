@@ -7,6 +7,7 @@ import com.ling.internalcommon.constant.OrderConstants;
 import com.ling.internalcommon.dto.ResponseResult;
 import com.ling.internalcommon.request.OrderRequest;
 import com.ling.internalcommon.dto.OrderInfo;
+import com.ling.internalcommon.request.PriceRuleIsNewRequest;
 import com.ling.internalcommon.response.MapTerminalResponse;
 import com.ling.internalcommon.util.RedisPrefixUtils;
 import com.ling.serviceorder.mapper.OrderInfoMapper;
@@ -56,7 +57,10 @@ public class OrderInfoService {
         }
 
         //需要判断计价规则版本是否为最新
-        ResponseResult aNew = servicePriceClient.isNew(orderRequest.getFareType(), orderRequest.getFareVersion());
+        PriceRuleIsNewRequest priceRuleIsNewRequest = new PriceRuleIsNewRequest();
+        priceRuleIsNewRequest.setFareType(orderRequest.getFareType());
+        priceRuleIsNewRequest.setFareVersion(orderRequest.getFareVersion());
+        ResponseResult aNew = servicePriceClient.isNew(priceRuleIsNewRequest);
         if(aNew.getCode() != 1){
             return aNew;
         }
@@ -115,6 +119,9 @@ public class OrderInfoService {
                 JSONObject jsonObject = result.getJSONObject(j);
                 String carIdString = jsonObject.getString("carId");
                 long carId = Long.parseLong(carIdString);
+
+                //查询是否有可派单的司机。
+
             }
 
         }

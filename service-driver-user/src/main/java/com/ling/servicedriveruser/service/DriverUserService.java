@@ -41,7 +41,7 @@ public class DriverUserService {
         //在成功添加driver后，在driver_user_work_status表中初始化该driver的工作状态的记录
         DriverUserWorkStatus driverUserWorkStatus = new DriverUserWorkStatus();
         driverUserWorkStatus.setDriverId(driverUser.getId());
-        driverUserWorkStatus.setWorkStatus(DriverCarConstants.DRIVER_WORK_STATUS_START);
+        driverUserWorkStatus.setWorkStatus(DriverCarConstants.DRIVER_WORK_STATUS_STOP);
         driverUserWorkStatus.setGmtCreate(now);
         driverUserWorkStatus.setGmtModified(now);
         driverUserWorkStatusMapper.insert(driverUserWorkStatus);

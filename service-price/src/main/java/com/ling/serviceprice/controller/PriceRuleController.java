@@ -3,6 +3,7 @@ package com.ling.serviceprice.controller;
 
 import com.ling.internalcommon.dto.PriceRule;
 import com.ling.internalcommon.dto.ResponseResult;
+import com.ling.internalcommon.request.PriceRuleIsNewRequest;
 import com.ling.serviceprice.service.PriceRuleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -40,9 +41,9 @@ public class PriceRuleController {
          return priceRuleService.getNewestVersion(fareType);
     }
 
-    @GetMapping("/is-new")
-    public ResponseResult isNewRule(@RequestParam String fareType, @RequestParam Integer fareVersion){
-        return priceRuleService.isNew(fareType,fareVersion);
+    @PostMapping("/is-new")
+    public ResponseResult isNewRule(@RequestBody PriceRuleIsNewRequest priceRuleIsNewRequest){
+        return priceRuleService.isNew(priceRuleIsNewRequest.getFareType(),priceRuleIsNewRequest.getFareVersion());
     }
 
     @GetMapping("/if-exist")
