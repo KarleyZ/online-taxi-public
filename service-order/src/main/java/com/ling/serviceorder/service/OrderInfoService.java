@@ -19,6 +19,8 @@ import com.ling.serviceorder.remote.ServicePriceClient;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
+import org.redisson.api.RLock;
+import org.redisson.api.RedissonClient;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -47,6 +49,9 @@ public class OrderInfoService {
 
     @Autowired
     StringRedisTemplate stringRedisTemplate;
+
+    //@Autowired
+    //RedissonClient redissonClient;
 
     public ResponseResult add(OrderRequest orderRequest){
         //判断当前城市是否有司机
@@ -97,7 +102,8 @@ public class OrderInfoService {
      * 实时订单派单逻辑
      * @param orderInfo
      */
-    public void dispatchRealTimeOrder(OrderInfo orderInfo){
+    //处理单机并发问题：1.方法加synchronized，重量锁，对整个方法太慢了，只添加到锁库部分
+    public synchronized void dispatchRealTimeOrder(OrderInfo orderInfo){
         //2km
         //出发纬度
         String depLongitude = orderInfo.getDepLongitude();
@@ -117,13 +123,12 @@ public class OrderInfoService {
             log.info("终端搜索结果"+ JSONArray.fromObject(listResponseResult.getData()).toString());
             //解析终端结果
             //这里有问题，没车怎么办？
-            JSONArray result = JSONArray.fromObject(listResponseResult.getData());
-            for (int j = 0; j < result.size(); j++) {
-                JSONObject jsonObject = result.getJSONObject(j);
-                String carIdString = jsonObject.getString("carId");
-                long carId = Long.parseLong(carIdString);
-                Long longitude = jsonObject.getLong("longitude");
-                Long latitude = jsonObject.getLong("latitude");
+            List<MapTerminalResponse> data = listResponseResult.getData();
+            for (int j = 0; j < data.size(); j++) {
+                MapTerminalResponse jsonObject = data.get(j);
+                long carId = jsonObject.getCarId();
+                String longitude = jsonObject.getLongitude();
+                String latitude = jsonObject.getLatitude();
 
                 //查询是否有可派单的司机。
                 ResponseResult<OrderDriverResponse> availableDriver = serviceDriverUserClient.getAvailableDriver(carId);
@@ -136,25 +141,44 @@ public class OrderInfoService {
                     //判断司机是否有正在进行的订单
                     OrderDriverResponse orderDriverResponse = availableDriver.getData();
                     Long driverId = orderDriverResponse.getDriverId();
-                    if(HasDriverOngoingOrders(driverId)){
-                        continue;
-                    }
-                    //补全订单中有关司机的信息
-                    //查询当前车辆信息
-                    orderInfo.setDriverId(driverId);
-                    orderInfo.setDriverPhone(orderDriverResponse.getDriverPhone());
-                    orderInfo.setCarId(carId);
-                    orderInfo.setReceiveOrderCarLongitude(longitude+"");
-                    orderInfo.setReceiveOrderCarLatitude(latitude+"");
-                    orderInfo.setReceiveOrderTime(LocalDateTime.now());
-                    orderInfo.setLicenseId(orderDriverResponse.getLicenseId());
-                    orderInfo.setVehicleNo(orderDriverResponse.getVehicleNo());
-                    orderInfo.setOrderStatus(OrderConstants.RECEIVE_ORDER);
+                    /**
+                     * 多集群并法问题用redisson来解决
+                     */
+                    //String lockKey = (driverId+"").intern();
+                    //RLock lock = redissonClient.getLock(lockKey);
+                    //lock.lock();
+                    /**
+                     * 锁司机id的小技巧:
+                     * 为什么driverId不行，因为该值是对象.get得到的，对于不同线程其实是不同线程的值，
+                     * 每次锁不同的值所以没锁住，注意driverId对象没变，引用（赋）的值不同
+                     * 为什么intern可以？因为每次都将driverId的值字符串存入常量池，
+                     * 该常量池将字符串常量如果有就返回该常量池，没有就添加并返回常量池
+                     * 所以每次锁的是同一个常量池中的值
+                     * */
+                    //synchronized ((driverId+"").intern()){
+                        if(HasDriverOngoingOrders(driverId)){
+                            //lock.unlok();
+                            continue;
+                        }
+                        //补全订单中有关司机的信息
+                        //查询当前车辆信息
+                        orderInfo.setDriverId(driverId);
+                        orderInfo.setDriverPhone(orderDriverResponse.getDriverPhone());
+                        orderInfo.setCarId(carId);
+                        orderInfo.setReceiveOrderCarLongitude(longitude);
+                        orderInfo.setReceiveOrderCarLatitude(latitude);
+                        orderInfo.setReceiveOrderTime(LocalDateTime.now());
+                        orderInfo.setLicenseId(orderDriverResponse.getLicenseId());
+                        orderInfo.setVehicleNo(orderDriverResponse.getVehicleNo());
+                        orderInfo.setOrderStatus(OrderConstants.RECEIVE_ORDER);
 
-                    orderInfoMapper.updateById(orderInfo);
+                        orderInfoMapper.updateById(orderInfo);
 
-                    //退出不再进行司机的查找
-                    break radius;
+                        //lock.unlock(); //redisson解锁
+                        //退出不再进行司机的查找
+                        break radius;
+                    //}
+
                 }
             }
 
