@@ -2,11 +2,13 @@ package com.ling.servicessepush;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 
 @SpringBootApplication
-public class SseDriverClientWeb {
+@EnableDiscoveryClient
+public class ServiceSsePushApplicaiton {
 
     public static void main(String[] args) {
-        SpringApplication.run(SseDriverClientWeb.class);
+        SpringApplication.run(ServiceSsePushApplicaiton.class);
     }
 }

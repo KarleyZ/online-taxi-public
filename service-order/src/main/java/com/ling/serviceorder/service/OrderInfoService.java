@@ -3,6 +3,7 @@ package com.ling.serviceorder.service;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.ling.internalcommon.constant.CommonStatusEnum;
+import com.ling.internalcommon.constant.IdentityConstants;
 import com.ling.internalcommon.constant.OrderConstants;
 import com.ling.internalcommon.dto.Car;
 import com.ling.internalcommon.dto.ResponseResult;
@@ -16,6 +17,7 @@ import com.ling.serviceorder.mapper.OrderInfoMapper;
 import com.ling.serviceorder.remote.ServiceDriverUserClient;
 import com.ling.serviceorder.remote.ServiceMapClient;
 import com.ling.serviceorder.remote.ServicePriceClient;
+import com.ling.serviceorder.remote.ServiceSsePushClient;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
@@ -49,6 +51,9 @@ public class OrderInfoService {
 
     @Autowired
     StringRedisTemplate stringRedisTemplate;
+
+    @Autowired
+    ServiceSsePushClient serviceSsePushClient;
 
     //@Autowired
     //RedissonClient redissonClient;
@@ -174,6 +179,18 @@ public class OrderInfoService {
 
                         orderInfoMapper.updateById(orderInfo);
 
+                        //通知司机
+                        JSONObject driverContent = new JSONObject();
+                        driverContent.put("passengerId",orderInfo.getPassengerId());
+                        driverContent.put("passengerPhone",orderInfo.getPassengerPhone());
+                        driverContent.put("departure",orderInfo.getDeparture());
+                        driverContent.put("depLongitude",orderInfo.getDepLongitude());
+                        driverContent.put("depLatitude",orderInfo.getDepLatitude());
+                        driverContent.put("destination",orderInfo.getDestination());
+                        driverContent.put("destLongitude",orderInfo.getDestLongitude());
+                        driverContent.put("destLatitude",orderInfo.getDestLatitude());
+
+                        serviceSsePushClient.push(driverId, IdentityConstants.DRIVER_IDENTITY,driverContent.toString());
                         //lock.unlock(); //redisson解锁
                         //退出不再进行司机的查找
                         break radius;
