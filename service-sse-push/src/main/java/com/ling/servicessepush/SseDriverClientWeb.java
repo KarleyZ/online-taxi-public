@@ -1,4 +1,4 @@
-package com.ling.ssedriverclientweb;
+package com.ling.servicessepush;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
