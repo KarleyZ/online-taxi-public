@@ -7,8 +7,8 @@
         <version>1.0-SNAPSHOT</version>
     </parent>
     <groupId>com.ling</groupId>
-    <artifactId>sse-driver-client-web</artifactId>
-    <name>sse-driver-client-web</name>
+    <artifactId>service-sse-push</artifactId>
+    <name>service-sse-push</name>
 
     <dependencies>
         <dependency>
