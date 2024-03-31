@@ -12,6 +12,7 @@ import com.ling.internalcommon.dto.OrderInfo;
 import com.ling.internalcommon.request.PriceRuleIsNewRequest;
 import com.ling.internalcommon.response.MapTerminalResponse;
 import com.ling.internalcommon.response.OrderDriverResponse;
+import com.ling.internalcommon.response.TrsearchResponse;
 import com.ling.internalcommon.util.RedisPrefixUtils;
 import com.ling.serviceorder.mapper.OrderInfoMapper;
 import com.ling.serviceorder.remote.ServiceDriverUserClient;
@@ -31,6 +32,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -413,7 +415,14 @@ public class OrderInfoService {
         orderInfo.setPassengerGetoffLatitude(orderRequest.getPassengerGetoffLatitude());
         orderInfo.setOrderStatus(OrderConstants.PASSENGER_GET_OFF);
         //订单行驶的路程和时间
+        ResponseResult<Car> car = serviceDriverUserClient.getCarById(orderInfo.getCarId());
+        ResponseResult<TrsearchResponse> trSearch = serviceMapClient.trSearch(car.getData().getTid(),
+                orderInfo.getToPickUpPassengerTime().toInstant(ZoneOffset.of("+8")).toEpochMilli()
+                , LocalDateTime.now().toInstant(ZoneOffset.of("+8")).toEpochMilli());
 
+        TrsearchResponse data = trSearch.getData();
+        orderInfo.setDriveMile(data.getDriverMile());
+        orderInfo.setDriveTime(data.getDriverTime());
 
         orderInfoMapper.updateById(orderInfo);
         return ResponseResult.success();
