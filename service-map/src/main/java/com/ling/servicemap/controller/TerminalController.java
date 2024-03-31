@@ -2,6 +2,7 @@ package com.ling.servicemap.controller;
 
 import com.ling.internalcommon.dto.ResponseResult;
 import com.ling.internalcommon.response.MapTerminalResponse;
+import com.ling.internalcommon.response.TrsearchResponse;
 import com.ling.servicemap.service.TerminalService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -33,5 +34,11 @@ public class TerminalController {
     @PostMapping("/aroundsearch")
     public ResponseResult<List<MapTerminalResponse>> aroundSearch(String center, Integer radius){
         return terminalService.aroundSearch(center,radius);
+    }
+
+    @PostMapping("/trsearch")
+    public ResponseResult<TrsearchResponse> trSearch(String tid, Long startTime, Long endTime){
+
+        return terminalService.trSearch(tid,startTime,endTime);
     }
 }

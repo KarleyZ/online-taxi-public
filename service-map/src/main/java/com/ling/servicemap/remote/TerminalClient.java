@@ -3,6 +3,7 @@ package com.ling.servicemap.remote;
 import com.ling.internalcommon.constant.AmapConfigConstants;
 import com.ling.internalcommon.dto.ResponseResult;
 import com.ling.internalcommon.response.MapTerminalResponse;
+import com.ling.internalcommon.response.TrsearchResponse;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
@@ -102,5 +103,47 @@ public class TerminalClient {
 
         return ResponseResult.success(terminals);
 
+    }
+
+    public ResponseResult<TrsearchResponse> trSearch(String tid,Long startTime,Long endTime){
+        StringBuilder url = new StringBuilder();
+        url.append(AmapConfigConstants.TERMINAL_TRSEARCH);
+        url.append("?");
+        url.append("key=" + amapKey);
+        url.append("&");
+        url.append("sid=" + amapSid);
+        url.append("&");
+        url.append("tid=" + tid);
+        url.append("&");
+        url.append("starttime=" + startTime);
+        url.append("&");
+        url.append("endtime=" + endTime);
+
+        log.info("轨迹搜索的请求url:" + url.toString());
+        ResponseEntity<String> postForEntity = restTemplate.getForEntity(url.toString(), String.class);
+
+        JSONObject result = JSONObject.fromObject(postForEntity.getBody());
+        log.info("轨迹搜索请求的结果:" + result.toString());
+
+        JSONObject data = result.getJSONObject("data");
+        int counts = data.getInt("counts");
+        if(counts == 0){
+            return null;
+        }
+        JSONArray tracks = data.getJSONArray("tracks");
+        long driverMile = 0L;
+        long driverTime = 0L;
+        for (int i = 0; i < tracks.size(); i++) {
+            JSONObject track = tracks.getJSONObject(i);
+            long distance = track.getLong("distance");//米
+            long time = track.getLong("time");//毫秒
+            time = time/(1000 *60);
+            driverMile = driverMile + distance;
+            driverTime = driverTime + time;
+        }
+        TrsearchResponse trsearchResponse = new TrsearchResponse();
+        trsearchResponse.setDriverMile(driverMile);
+        trsearchResponse.setDriverTime(driverTime);
+        return ResponseResult.success(trsearchResponse);
     }
 }
