@@ -54,6 +54,11 @@ public class OrderInfo implements Serializable {
     private String address;
 
     /**
+     * 车辆类型
+     */
+    private String vehicleType;
+
+    /**
      * 订单发起时间
      */
     private LocalDateTime orderTime;
@@ -216,6 +221,11 @@ public class OrderInfo implements Serializable {
      * 订单状态：1：订单开始 2：司机接单 3：去接乘客 4：司机到的乘客起点 5：乘客上车，司机开始行程 6：到达目的地，行程结束 7：发起收款 8：支付完成 9：订单取消
      */
     private Integer orderStatus;
+
+    /**
+     * 订单的实际价格
+     */
+    private Double price;
 
     private LocalDateTime gmtCreate;
 

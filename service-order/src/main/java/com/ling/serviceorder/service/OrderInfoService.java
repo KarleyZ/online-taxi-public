@@ -166,6 +166,9 @@ public class OrderInfoService {
                     continue;
                 }else {
                     log.info("找到了正在出车的司机" + carId);
+
+
+
                     //判断司机是否有正在进行的订单
                     OrderDriverResponse orderDriverResponse = availableDriver.getData();
                     Long driverId = orderDriverResponse.getDriverId();
@@ -188,7 +191,13 @@ public class OrderInfoService {
                             //lock.unlok();
                             continue;
                         }
-                        //补全订单中有关司机的信息
+                        //判断当前车型是否和乘客下订单选的一致?
+                    String vehicleTypeFromCar = orderDriverResponse.getVehicleType();
+                    if(!(vehicleTypeFromCar.trim().equals(orderInfo.getVehicleType().trim()))){
+                        log.info("车型不符合！");
+                        continue;
+                    }
+                    //补全订单中有关司机的信息
                         //查询当前车辆信息
                         orderInfo.setDriverId(driverId);
                         orderInfo.setDriverPhone(orderDriverResponse.getDriverPhone());
@@ -421,8 +430,15 @@ public class OrderInfoService {
                 , LocalDateTime.now().toInstant(ZoneOffset.of("+8")).toEpochMilli());
 
         TrsearchResponse data = trSearch.getData();
-        orderInfo.setDriveMile(data.getDriverMile());
-        orderInfo.setDriveTime(data.getDriverTime());
+        Long driverMile = data.getDriverMile();
+        Long driverTime = data.getDriverTime();
+        orderInfo.setDriveMile(driverMile);
+        orderInfo.setDriveTime(driverTime);
+        //更新价格
+        ResponseResult<Double> doubleResponseResult = servicePriceClient.calculatePrice(driverMile.intValue(), driverTime.intValue(), orderInfo.getAddress(), orderInfo.getVehicleType());
+        Double price = doubleResponseResult.getData();
+
+        orderInfo.setPrice(price);
 
         orderInfoMapper.updateById(orderInfo);
         return ResponseResult.success();

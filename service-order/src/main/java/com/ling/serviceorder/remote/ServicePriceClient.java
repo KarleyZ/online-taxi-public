@@ -3,10 +3,7 @@ package com.ling.serviceorder.remote;
 import com.ling.internalcommon.dto.ResponseResult;
 import com.ling.internalcommon.request.PriceRuleIsNewRequest;
 import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 @FeignClient("service-price")
 public interface ServicePriceClient {
@@ -17,4 +14,6 @@ public interface ServicePriceClient {
     @RequestMapping(method = RequestMethod.GET,value = "/price-rule/if-exist")
     public ResponseResult<Boolean> ifExists(@RequestParam String cityCode,@RequestParam String vehicleType);
 
+    @RequestMapping(method = RequestMethod.POST,value = "/calculate-price")
+    public ResponseResult<Double> calculatePrice(@RequestParam Integer distance,@RequestParam Integer duration,@RequestParam String cityCode,@RequestParam String vehicleType);
 }

@@ -13,6 +13,7 @@ import com.ling.serviceprice.remote.ServiceMapClient;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.math.BigDecimal;
 import java.util.HashMap;
@@ -73,7 +74,7 @@ public class PassengerPriceService {
     }
 
     /**
-     * 根据距离，时长和计价规则来计算最终价格
+     * 根据距离，时长和计价规则来预计算最终价格
      * @param distance
      * @param duration
      * @param priceRule
@@ -120,5 +121,31 @@ public class PassengerPriceService {
         priceBigDecimal.setScale(2,BigDecimal.ROUND_HALF_UP);
 
         return priceBigDecimal.doubleValue();
+    }
+
+    /**
+     * 根据距离，时长和计价规则来计算最终实际价格
+     * @param distance
+     * @param duration
+     * @param cityCode
+     * @param vehicleType
+     * @return
+     */
+    public ResponseResult<Double> calculatePrice(Integer distance, Integer duration, String cityCode, String vehicleType){
+        log.info("读取计价规则");
+        QueryWrapper<PriceRule> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("city_code",cityCode);
+        queryWrapper.eq("vehicle_type",vehicleType);
+        queryWrapper.orderByDesc("fare_version");
+        List<PriceRule> priceRules = priceRuleMapper.selectList(queryWrapper);
+        if (priceRules.isEmpty()){
+            log.info("计价规则不存在");
+            return ResponseResult.fail(CommonStatusEnum.PRICE_RULE_EMPTY.getCode(),CommonStatusEnum.PRICE_RULE_EMPTY.getValue());
+        }
+        PriceRule priceRule = priceRules.get(0);
+        //根据计价规则计算出真正的价格
+        double price = getPrice(distance, duration, priceRule);
+
+        return ResponseResult.success(price);
     }
 }
