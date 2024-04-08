@@ -7,8 +7,8 @@
         <version>1.0-SNAPSHOT</version>
     </parent>
     <groupId>com.ling</groupId>
-    <artifactId>test-alipay</artifactId>
-    <name>test-alipay</name>
+    <artifactId>service-pay</artifactId>
+    <name>service-pay</name>
     <dependencies>
         <!-- https://mvnrepository.com/artifact/com.alipay.sdk/alipay-easysdk -->
         <dependency>
@@ -19,6 +19,19 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.alibaba.cloud</groupId>
+            <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-openfeign</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-loadbalancer</artifactId>
         </dependency>
     </dependencies>
 </project>

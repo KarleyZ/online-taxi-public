@@ -443,4 +443,18 @@ public class OrderInfoService {
         orderInfoMapper.updateById(orderInfo);
         return ResponseResult.success();
     }
+
+    /**
+     * 乘客支付成功
+     * @param orderRequest
+     * @return
+     */
+    public ResponseResult pay(OrderRequest orderRequest){
+        Long orderId = orderRequest.getOrderId();
+        OrderInfo orderInfo = orderInfoMapper.selectById(orderId);
+        orderInfo.setOrderStatus(OrderConstants.SUCCESS_PAY);
+
+        orderInfoMapper.updateById(orderInfo);
+        return  null;
+    }
 }

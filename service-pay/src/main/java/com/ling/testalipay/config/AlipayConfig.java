@@ -29,7 +29,7 @@ public class AlipayConfig {
         //基础配置
         Config config = new Config();
         config.protocol = "https";
-        config.gatewayHost = "https://openapi-sandbox.dl.alipaydev.com";
+        config.gatewayHost = "openapi-sandbox.dl.alipaydev.com";
         config.signType = "RSA2";
 
         //业务配置

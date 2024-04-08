@@ -81,5 +81,14 @@ public class OrderInfoController {
         return orderInfoService.passengerGetOff(orderRequest);
     }
 
+    /**
+     * 乘客支付完成
+     * @param orderRequest
+     * @return
+     */
+    @PostMapping("/pay")
+    public ResponseResult pay(@RequestBody OrderRequest orderRequest){
+        return orderInfoService.pay(orderRequest);
+    }
 
 }
