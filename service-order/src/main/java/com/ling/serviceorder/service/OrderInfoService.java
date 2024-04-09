@@ -115,12 +115,19 @@ public class OrderInfoService {
             if(result == 1){
                 break;
             }
-            //等20s
-            try {
-                Thread.sleep(20000);
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
+            //循环完成后依然result = 0,就是没司机接单,修改为订单无效状态
+            if(i == 5){
+                orderInfo.setOrderStatus(OrderConstants.ORDER_INVALID);
+                orderInfoMapper.updateById(orderInfo);
+            }else {
+                //等20s
+                try {
+                    Thread.sleep(20000);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
             }
+
         }
 
         return ResponseResult.success();
@@ -151,7 +158,7 @@ public class OrderInfoService {
             log.info("在半径为"+radiusList.get(i));
             log.info("终端搜索结果"+ JSONArray.fromObject(listResponseResult.getData()).toString());
             //解析终端结果
-            //这里有问题，没车怎么办？
+            //这里有问题，没车怎么办？解决方法第118行
             List<MapTerminalResponse> data = listResponseResult.getData();
             for (int j = 0; j < data.size(); j++) {
                 MapTerminalResponse jsonObject = data.get(j);
@@ -253,6 +260,8 @@ public class OrderInfoService {
             }
 
         }
+
+
         return result;
     }
 

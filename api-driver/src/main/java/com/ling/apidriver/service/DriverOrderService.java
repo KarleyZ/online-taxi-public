@@ -1,6 +1,7 @@
 package com.ling.apidriver.service;
 
 import com.ling.apidriver.remote.ServiceOrderClient;
+import com.ling.internalcommon.constant.IdentityConstants;
 import com.ling.internalcommon.dto.ResponseResult;
 import com.ling.internalcommon.request.OrderRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,6 +49,15 @@ public class DriverOrderService {
         return orderClient.passengerGetOff(orderRequest);
     }
 
+    /**
+     * 司机取消订单
+     * @param orderId
+     * @return
+     */
+    public ResponseResult cancel(Long orderId){
+
+        return orderClient.cancel(orderId, IdentityConstants.DRIVER_IDENTITY);
+    }
 
 
 }
