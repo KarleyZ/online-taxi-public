@@ -93,7 +93,11 @@ public enum CommonStatusEnum {
     /**
      * 打车服务某地未开通
      */
-    CITY_SERVICE_NOT_EXISTS(1602,"当前城市不提供叫车服务")
+    CITY_SERVICE_NOT_EXISTS(1602,"当前城市不提供叫车服务"),
+    /**
+     * 订单取消失败
+     */
+    ORDER_CANCEL_ERROR(1603,"订单取消失败")
     ;
 
     @Getter

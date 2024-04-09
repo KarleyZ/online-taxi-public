@@ -24,4 +24,18 @@ public class OrderConstants {
     public static final int TO_START_PAY = 7;
     public static final int SUCCESS_PAY = 8;
     public static final int ORDER_CANCEL = 9;
+
+    /**
+     * 订单取消
+     * 1:乘客提前取消
+     * 2:司机提前取消
+     * 3:平台取消
+     * 4:乘客违约取消
+     * 4:司机违约取消
+     */
+    public static final int CANACEL_PASSENGER_BEFORE = 1;
+    public static final int CANACEL_DRIVER_BEFORE = 2;
+    public static final int CANACEL_PLATFORM_BEFORE = 3;
+    public static final int CANACEL_PASSENGER_ILLEGAL = 4;
+    public static final int CANACEL_DRIVER_ILLEGAL = 5;
 }
